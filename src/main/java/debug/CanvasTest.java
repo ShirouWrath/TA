@@ -74,6 +74,7 @@ public class CanvasTest extends Application {
                     rotationPoint = new Point3D(random.nextDouble()*100,random.nextDouble()*100,0.5d);
                     textBase.setRotationAxis(rotationPoint);
                     textBloom.setRotationAxis(rotationPoint);
+
                 }
                 textBloom.setOpacity(Math.sin(visibility/100));
                 textBase.setScaleX(visibility/100);
