@@ -26,13 +26,15 @@ public class WeatherControl {
         System.out.println("URL:" + "https://openweathermap.org/city/3088171");
         HtmlPage page = webClient.getPage("https://openweathermap.org/city/3088171");
         Thread.sleep(2000);
-        for (DomNode domNode : page.getHtmlElementById("weather-widget").getOneHtmlElementByAttribute("div", "class", "section-content").getOneHtmlElementByAttribute("div", "class", "grid-container grid-4-5").getChildren()) {
+        Iterator<DomNode> it = page.getHtmlElementById("weather-widget").getOneHtmlElementByAttribute("div", "class", "section-content").getOneHtmlElementByAttribute("div", "class", "grid-container grid-4-5").getChildren().iterator();
+        while (it.hasNext()) {
             endCounter++;
+            DomNode element = it.next();
             if (endCounter == 1) {
-                List<String> lines = Arrays.asList(domNode.asNormalizedText().split("\\n"));
-                for (String line : lines) {
+                List<String> lines = Arrays.asList(element.asNormalizedText().split("\\n"));
+                for (String line: lines ) {
                     System.out.println(lines.indexOf(line) + ":" + line);
-                    if (lines.indexOf(line) == 3) {
+                    if(lines.indexOf(line)==3){
                         endResult = line;
                     }
                 }
