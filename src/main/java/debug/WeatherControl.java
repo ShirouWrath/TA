@@ -8,11 +8,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.regex.Pattern;
 
-/**
- * @author Sebastian Rafalont 2022 by Mobile Traffic DATA Sp. z o.o.
- */
 public class WeatherControl {
 
     public static void main(String[] args) throws Exception {
@@ -32,9 +28,9 @@ public class WeatherControl {
             DomNode element = it.next();
             if (endCounter == 1) {
                 List<String> lines = Arrays.asList(element.asNormalizedText().split("\\n"));
-                for (String line: lines ) {
+                for (String line : lines) {
                     System.out.println(lines.indexOf(line) + ":" + line);
-                    if(lines.indexOf(line)==3){
+                    if (lines.indexOf(line) == 3) {
                         endResult = line;
                     }
                 }
