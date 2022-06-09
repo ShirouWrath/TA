@@ -2,14 +2,17 @@ package debug;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.Bloom;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.Reflection;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Rectangle;
@@ -29,66 +32,70 @@ public class CanvasTest extends Application {
     BoxBlur boxBlur;
     Text textBase;
     Text textBloom;
+    TextField textField;
     Point3D rotationPoint;
     Reflection reflection;
-
-    public static void main(String[] args) {
-        launch(args);
-    }
+    boolean IS_UPDATE_ON = false;
 
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Drawing Operations Test");
         Group root = new Group();
+        //  OnClickEvent
+//        root.setOnMouseClicked(event ->
+//                System.out.println(event.getX() + ":" + event.getY())
+//        );
         Canvas canvas = new Canvas(1280, 720);
         rotationPoint = new Point3D(-30,-50, 200);
 
-        //REFLECTION TEST
+        //  REFLECTION TEST
         Reflection reflection = new Reflection();
-        // Setting the bottom opacity of the reflection
+        //  Setting the bottom opacity of the reflection
         reflection.setBottomOpacity(0.0);
-        // Setting the top opacity of the reflection
+        //  Setting the top opacity of the reflection
         reflection.setTopOpacity(0.5);
-        // Setting the top offset of the reflection
+        //  Setting the top offset of the reflection
         reflection.setTopOffset(10);
-        // Setting the fraction of the reflection
+        //  Setting the fraction of the reflection
         reflection.setFraction(0.7);
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
         drawShapes(gc, root);
         root.getChildren().add(canvas);
 
-        // FPS/UPDATE counter
-        AnimationTimer frameRateMeter = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                if(visibilityPolarization) {
-                    visibility -= 1;
-                }else{
-                    visibility += 1;
-                }
-                if (visibility >= 100 | visibility <= 0 ) {
-                    visibilityPolarization=!visibilityPolarization;
-                    //Test of random rotation
-                    Random random = new Random();
-                    rotationPoint = new Point3D(random.nextDouble()*100,random.nextDouble()*100,0.5d);
-                    textBase.setRotationAxis(rotationPoint);
-                    textBloom.setRotationAxis(rotationPoint);
+        if(IS_UPDATE_ON) {
+            //  FPS/UPDATE counter
+            AnimationTimer frameRateMeter = new AnimationTimer() {
+                @Override
+                public void handle(long now) {
+                    if (visibilityPolarization) {
+                        visibility -= 1;
+                    } else {
+                        visibility += 1;
+                    }
+                    if (visibility >= 100 | visibility <= 0) {
+                        visibilityPolarization = !visibilityPolarization;
+                        //Test of random rotation
+                        Random random = new Random();
+                        rotationPoint = new Point3D(random.nextDouble() * 100, random.nextDouble() * 100, 0.5d);
+                        textBase.setRotationAxis(rotationPoint);
+                        textBloom.setRotationAxis(rotationPoint);
 
+                    }
+                    textBloom.setOpacity(Math.sin(visibility / 100));
+                    textBase.setScaleX(visibility / 100);
+                    textBase.setScaleY(visibility / 100);
+                    textBloom.setScaleX(visibility / 100);
+                    textBloom.setScaleY(visibility / 100);
+                    //TEST OF ROTATION
+                    textBase.setRotate(20d);
+                    textBloom.setRotate(20d);
+                    textBase.setEffect(reflection);
                 }
-                textBloom.setOpacity(Math.sin(visibility/100));
-                textBase.setScaleX(visibility/100);
-                textBase.setScaleY(visibility/100);
-                textBloom.setScaleX(visibility/100);
-                textBloom.setScaleY(visibility/100);
-                //TEST OF ROTATION
-                textBase.setRotate(20d);
-                textBloom.setRotate(20d);
-                textBase.setEffect(reflection);
-            }
-        };
+            };
+            frameRateMeter.start();
+        }
 
-        frameRateMeter.start();
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
@@ -137,6 +144,7 @@ public class CanvasTest extends Application {
         rect.setWidth(160);
         rect.setHeight(80);
         rect.setFill(Color.DARKSLATEBLUE);
+        rect.setOnMouseClicked(t -> rect.setFill(Color.RED));
 
         textBase = new Text();
         textBase.setText("Bloom!");
@@ -155,6 +163,11 @@ public class CanvasTest extends Application {
         textBloom.setRotationAxis(rotationPoint);
         textBloom.setEffect(bloom);
 
+        textField = new TextField();
+        textField.setLayoutX(300);
+        textField.setLayoutY(300);
+        textField.setOnMouseClicked(event -> System.out.println("Text Field handler"));
+
 //        BoxBlur bb = new BoxBlur();
 //        bb.setWidth(5);
 //        bb.setHeight(5);
@@ -163,6 +176,7 @@ public class CanvasTest extends Application {
         root.getChildren().add(rect);
         root.getChildren().add(textBase);
         root.getChildren().add(textBloom);
+        root.getChildren().add(textField);
 
     }
 }

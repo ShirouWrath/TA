@@ -28,16 +28,21 @@ public class DeepLearningTest {
     private static final int FEATURES_COUNT = 4;
     private static final int CLASSES_COUNT = 3;
 
-    //TODO Upload project to gitlab
     public static void main(String[] args) throws Exception {
         //  Vectorization
         try (RecordReader recordReader = new CSVRecordReader(0, ',')) {
             recordReader.initialize(new FileSplit(new ClassPathResource("iris.txt").getFile()));
-
             DataSetIterator iterator = new RecordReaderDataSetIterator(
                     recordReader, 150, FEATURES_COUNT, CLASSES_COUNT);
             DataSet allData = iterator.next();
             allData.shuffle(42);
+            if(true){
+                for (int i = 0; i < 150; i++) {
+                    System.out.println(i + ":::" +allData.get(i).getFeatureMatrix());
+                }
+                return;
+            }
+
 
             DataNormalization normalizer = new NormalizerStandardize();
             normalizer.fit(allData);
