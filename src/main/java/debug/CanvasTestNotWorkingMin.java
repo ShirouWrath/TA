@@ -28,17 +28,15 @@ public class CanvasTestNotWorkingMin extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Drawing Operations Test");
         Group root = new Group();
-        Canvas canvas = new Canvas(1280, 720);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        drawShapes(gc, root);
-        root.getChildren().add(canvas);
 
-        primaryStage.setScene(new Scene(root));
+        drawShapes(root);
+
+        primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.show();
     }
 
-    private void drawShapes(GraphicsContext gc, Group root) {
-
+    private void drawShapes(Group root) {
+        //DRAW SHAPES
         Rectangle rect = new Rectangle();
         rect.setX(10);
         rect.setY(10);
@@ -47,6 +45,6 @@ public class CanvasTestNotWorkingMin extends Application {
         rect.setFill(Color.DARKSLATEBLUE);
         rect.setOnMouseClicked(t -> rect.setFill(Color.RED));
         root.getChildren().add(rect);
-
+        //END DRAW SHAPES
     }
 }
